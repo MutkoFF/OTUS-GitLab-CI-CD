@@ -1,4 +1,5 @@
 ## Практические работы курса "CI/CD на основе GitLab" от OTUS
 
 1. [Введение в СI/CD](lab01/)
-1. [Архитектура GitLab, GitLab Runner](lab02/)
+2. [Архитектура GitLab, GitLab Runner](lab02/)
+3. [Flow разработки](lab03/)
