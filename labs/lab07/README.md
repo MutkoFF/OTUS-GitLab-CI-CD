@@ -78,4 +78,45 @@ deploy:
 
 ![Картинка](./pictures/Picture03.jpg)
 
-К сожалению, на данный момент я не умею пользоваться Kubernetes т.к. работаю немного в другом профиле, но эта домашка побудила меня пойти его изучать. Чуть позже обязательно попробую выполнить 2 пункт :)
+Далее, я поднял ещё одну машину в YandexCloud, установил на неё кубер, настроил так, чтобы эта control plane мастер нода тоже могла запускать поды, после чего написал вот такой пайплайн
+```
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  image: alpine:latest
+
+  before_script:
+    - apk add --no-cache openssh-client
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_ed25519
+    - chmod 600 ~/.ssh/id_ed25519
+    - ssh-keyscan -H $DEPLOY_HOST >> ~/.ssh/known_hosts
+
+  script:
+    - |
+      ssh root@$DEPLOY_HOST "
+        cd /root/httpbin-chart || git clone https://github.com/matheusfm/httpbin-chart.git /root/httpbin-chart &&
+        cd /root/httpbin-chart &&
+        git pull &&
+        helm upgrade --install httpbin . \
+          --namespace httpbin \
+          --create-namespace \
+          --set service.type=NodePort \
+          --set service.nodePort=30080 \
+          --atomic \
+          --wait
+      "
+
+  only:
+    - main
+```
+
+И, как видимо, под запустился, приложение задеплоилось
+
+![Картинка](./pictures/Picture04.jpeg)
+
+![Картинка](./pictures/Picture05.jpeg)
+
+![Картинка](./pictures/Picture06.jpeg)
