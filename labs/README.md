@@ -8,3 +8,4 @@
 6. [Сборка настоящего проекта](lab06/)
 7. [CD c Docker, Docker Compose, Kubernetes](lab07/)
 8. [Подходы безопасности в разработке. Shift Left](lab08/)
+9. [Добавление анализаторов в pipeline](lab09/)
